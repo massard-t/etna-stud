@@ -7,27 +7,40 @@ import operator
 import statistics as s
 import etnawrapper as etna
 
-e = etna.EtnaWrapper(login='massar_t', password=os.environ.get('ETNAPASS'))
-
-e.get_students(promotion=205)
-resp = e.get_students(promotion=205)
-students = resp['students']
-logins = [e['login'] for e in students]
-
 def get_notes(notes):
-    return [e['student_mark'] for e in notes if not "jour" in e['activity_name'].lower()]
+    """Returns filtered student grades"""
+    return [ewrp['student_mark'] for ewrp in notes if not "jour" in ewrp['activity_name'].lower()]
 
-tots = []
-for stud in logins:
-    s_g = e.get_grades(login=stud)
-    g = get_notes(s_g)
-    tots.append({"login":stud, "mean":s.mean(g)})
+def get_b_login(final, **kwargs):
+    "Prints student stats"
+    should_check = kwargs.get('check')
+    login = kwargs.get('login')
+    for idx, stud in enumerate(reversed(final)):
+        if should_check and stud['login'] != login:
+            continue
+        print(idx+1, stud['login'], stud['mean'])
 
-final = sorted(tots, key=operator.itemgetter('mean'))
+def main():
+    "Main function"
+    ewrp = etna.EtnaWrapper(
+        login=os.environ.get('ETNAUSER'),
+        password=os.environ.get('ETNAPASS')
+    )
 
-def get_b_login(log):
-    for idx, st in enumerate(reversed(final)):
-        #if st['login'] == log:
-        print(idx+1, st['login'], st['mean'])
+    ewrp.get_students(promotion=205)
+    resp = ewrp.get_students(promotion=205)
+    students = resp['students']
+    logins = [ewrp['login'] for ewrp in students]
 
-get_b_login('chaho_l')
+
+    tots = []
+    for stud in logins:
+        student_grades = ewrp.get_grades(login=stud)
+        grades = get_notes(student_grades)
+        tots.append({"login":stud, "mean": s.mean(grades)})
+
+    final = sorted(tots, key=operator.itemgetter('mean'))
+    get_b_login(final, login='login')
+
+if __name__ == '__main__':
+    main()
