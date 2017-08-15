@@ -7,37 +7,50 @@ import operator
 import statistics as s
 import etnawrapper as etna
 
+
+ANAME = 'activity_name'
+MARK = 'student_mark'
+
+
 def get_notes(notes):
     """Returns filtered student grades"""
-    return [ewrp['student_mark'] for ewrp in notes if not "jour" in ewrp['activity_name'].lower()]
+    return [ewrp[MARK] for ewrp in notes if 'jour' not in ewrp[ANAME].lower()]
+
 
 def get_b_login(final, **kwargs):
-    "Prints student stats"
+    """Prints student stats"""
     should_check = kwargs.get('check')
     login = kwargs.get('login')
     for idx, stud in enumerate(reversed(final)):
         if should_check and stud['login'] != login:
             continue
-        print(idx+1, stud['login'], stud['mean'])
+        print(idx + 1, stud['login'], stud['mean'])
+
 
 def main():
-    "Main function"
+    """Main function"""
+    login = os.environ.get('ETNAUSER')
+    password = os.environ.get('ETNAPASS')
+    promotion = os.environ.get('PROMOTION', 205)
+
     ewrp = etna.EtnaWrapper(
-        login=os.environ.get('ETNAUSER'),
-        password=os.environ.get('ETNAPASS')
+        login=login,
+        password=password
     )
 
-    ewrp.get_students(promotion=205)
-    resp = ewrp.get_students(promotion=205)
+    resp = ewrp.get_students(promotion=promotion)
     students = resp['students']
     logins = [ewrp['login'] for ewrp in students]
-
 
     tots = []
     for stud in logins:
         student_grades = ewrp.get_grades(login=stud)
         grades = get_notes(student_grades)
-        tots.append({"login":stud, "mean": s.mean(grades)})
+        stud_mean = s.mean(grades)
+        tots.append({
+            'login': stud,
+            'mean': stud_mean
+        })
 
     final = sorted(tots, key=operator.itemgetter('mean'))
     get_b_login(final, login='login')
