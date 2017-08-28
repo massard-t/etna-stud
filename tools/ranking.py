@@ -6,7 +6,10 @@ import os
 import operator
 import statistics as s
 import etnawrapper as etna
+import devscripts
 
+
+LOGGER = devscripts.simple_logger()
 
 ANAME = 'activity_name'
 MARK = 'student_mark'
@@ -38,13 +41,16 @@ def main():
         password=password
     )
 
+    LOGGER.info("Identified as: %s", login)
+
     resp = ewrp.get_students(promotion=promotion)
+    LOGGER.info("Collected students from promotion: %d", promotion)
     students = resp['students']
     logins = [ewrp['login'] for ewrp in students]
 
     tots = []
     for stud in logins:
-        student_grades = ewrp.get_grades(login=stud)
+        student_grades = ewrp.get_grades(login=stud, promotion=promotion)
         grades = get_notes(student_grades)
         stud_mean = s.mean(grades)
         tots.append({
