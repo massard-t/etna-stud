@@ -1,2 +1,3 @@
 Flask==0.12.2
-etnawrapper==0.4
+etnawrapper==0.5
+devscripts
