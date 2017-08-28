@@ -1,6 +1,32 @@
 # Etna-Stud
 Webapp aiming to provide students statistics about projects and stuff.
 
+## Structure
+Okay, so, I'm currently more in a R&D phase, looking for some ideas.
+
+### Cheap one
+First one, the no-cost one, would be to store data in a DB such as SQLite,
+in order to avoid having to request the APIs everytime we want data.
+
+### Could-cost-a-little
+Second one may be using Firebase, which would allow to only create *client*
+websites, and maybe even CLI tools (I highly prefer these).
+Problem is, I would have to set it up.
+
+### Real cost
+The least preferred one would be to rent a server, but I prefer to not spend
+a penny on an open-source project (yet).
+
+### Alternative
+If the project is really successful, I may talk to my school and try to
+have them host it there. I don't know about this one, I highly prefer
+to have it totally parallel to school, but still, I thought about it.
+
+### Conclusion
+Theses structures will probably follow each other, if the project has any success.
+I'll start with the free one, then each major version bump will be a change in structure.
+
+
 ## Objectives
 
 - Provide a simple and easy way of having informations about students at school
