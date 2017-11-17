@@ -42,7 +42,6 @@ def main():
     )
 
     LOGGER.info("Identified as: %s", login)
-
     resp = ewrp.get_students(promotion=promotion)
     LOGGER.info("Collected students from promotion: %d", promotion)
     students = resp['students']
@@ -50,13 +49,16 @@ def main():
 
     tots = []
     for stud in logins:
-        student_grades = ewrp.get_grades(login=stud, promotion=promotion)
-        grades = get_notes(student_grades)
-        stud_mean = s.mean(grades)
-        tots.append({
-            'login': stud,
-            'mean': stud_mean
-        })
+        try:
+            student_grades = ewrp.get_grades(login=stud, promotion=promotion)
+            grades = get_notes(student_grades)
+            stud_mean = s.mean(grades)
+            tots.append({
+                'login': stud,
+                'mean': stud_mean
+            })
+        except:
+            LOGGER.exception("Something went wrong requesting data from: %s", stud)
 
     final = sorted(tots, key=operator.itemgetter('mean'))
     get_b_login(final, login='login')
