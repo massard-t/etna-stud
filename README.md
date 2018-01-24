@@ -1,6 +1,15 @@
 # Etna-Stud
 Webapp aiming to provide students statistics about projects and stuff.
 
+## Installation
+
+### Dependencies
+
+```bash
+python3.5
+virtualenv
+```
+
 ## Structure
 Okay, so, I'm currently more in a R&D phase, looking for some ideas.
 
