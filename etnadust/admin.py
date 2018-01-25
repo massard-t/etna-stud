@@ -13,6 +13,7 @@ class StudentAdmin(admin.ModelAdmin):
             None, {
                 'fields': (
                     'login',
+                    'user'
                 )
             }
         ],
